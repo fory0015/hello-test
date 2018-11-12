@@ -1,0 +1,12 @@
+<div>
+  <h4>level:</h4>
+  <input #levelValue [(ngModel)]="level" id="level-box" (keyup)="showValue(levelValue.value)" />
+
+  <ul class="level-result">
+    <li *ngFor="let level of levels$ | async">
+      <a (click)="inputValue(level.level)">
+        {{level.level}} | {{level.exp}}
+      </a>
+    </li>
+  </ul>
+</div>
