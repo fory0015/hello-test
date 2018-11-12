@@ -17,19 +17,11 @@ export class InMemoryDataService implements InMemoryDbService {
       { id: 20, name: 'Tornado' }
     ];
 
-    const levels = [
-      { id: 1, level: 1, exp: 1 },
-      { id: 2, level: 3, exp: 3 },
-      { id: 3, level: 2, exp: 2 },
-      { id: 4, level: 4, exp: 4 },
-      { id: 5, level: 5, exp: 5 },
-      { id: 6, level: 6, exp: 6 },
-      { id: 7, level: 7, exp: 7 },
-      { id: 8, level: 8, exp: 8 },
-      { id: 9, level: 9, exp: 9 },
-      { id: 10, level: 10, exp: 10 },
-      { id: 11, level: 11, exp: 11 }
-    ]
+    const levels = []
+    for (let i = 1; i <= 100; i++) {
+      levels.push({ id: i, level: i, exp: 100 * i });
+    }
+
     return { heroes, levels };
   }
 
