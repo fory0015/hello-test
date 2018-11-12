@@ -36,8 +36,6 @@ export class CalculationComponent implements OnInit {
   showValue(term: number): void {
     this.searchTerms.next(term);
     this.level = term;
-    console.log(this.levels$);
-    console.log(this.level);
   }
 
   inputValue(level: number): void {

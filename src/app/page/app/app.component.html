@@ -5,4 +5,4 @@
   <a routerLink="/calc">Calculation</a>
 </nav>
 <router-outlet></router-outlet>
-<app-messages></app-messages>
+<app-messages *ngIf="isShow"></app-messages>
