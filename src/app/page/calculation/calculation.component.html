@@ -1,7 +1,12 @@
-<div>
+<nav>
+  <a routerLink="./">test</a>
+  <a routerLink="./official">official</a>
+</nav>
+
+<div *ngIf="isShow">
   <h4>level:</h4>
   <input #levelValue [(ngModel)]="level" id="level-box" (keyup)="showValue(levelValue.value)" />
-
+  <!-- level 查询列表 -->
   <ul class="level-result">
     <li *ngFor="let level of levels$ | async">
       <a (click)="inputValue(level.level)">
@@ -10,3 +15,5 @@
     </li>
   </ul>
 </div>
+
+<router-outlet></router-outlet>

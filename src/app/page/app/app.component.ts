@@ -16,10 +16,10 @@ export class AppComponent {
   ) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
-        if (event.url === '/calc') {
-          this.isShow = false;
-        } else {
+        if (event.url.match(/^\/calc/) === null) {
           this.isShow = true;
+        } else {
+          this.isShow = false;
         }
       }
     });

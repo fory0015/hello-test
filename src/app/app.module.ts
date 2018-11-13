@@ -14,6 +14,7 @@ import { MessagesComponent } from './page/messages/messages.component';
 import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { HeroSearchComponent } from './page/hero-search/hero-search.component';
 import { CalculationComponent } from './page/calculation/calculation.component';
+import { OfficialComponent } from './page/official/official.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { CalculationComponent } from './page/calculation/calculation.component';
     MessagesComponent,
     DashboardComponent,
     HeroSearchComponent,
-    CalculationComponent
+    CalculationComponent,
+    OfficialComponent
   ],
   imports: [
     BrowserModule,
