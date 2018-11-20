@@ -1,0 +1,21 @@
+.calc-official {
+  margin-top: 10px;
+  nz-card {
+    width: 350px !important;
+    margin: 20px auto;
+  }
+  nz-col {
+    text-align: center;
+  }
+  .map {
+    width: 400px;
+    margin: 20px auto !important;
+    nz-col {
+      margin: 1px 0;
+      [nz-button] {
+        width: 100%;
+        padding: 0;
+      }
+    }
+  }
+}

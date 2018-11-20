@@ -1,3 +1,37 @@
-<p>
-  official works!
-</p>
+<div class="calc-official">
+  <nz-card style="width:300px;" nzTitle="已选择" [nzExtra]="extraTemplate">
+    <p>level<span *ngIf="level">{{startLevel}},{{endLevel}}</span></p>
+    <p>map:<span *ngIf="map">{{map.name}},{{map.exp}},{{map.downlevel}}</span></p>
+    <p>
+      <label nz-checkbox [(ngModel)]="isCaptain">队长</label>
+      <label nz-checkbox [(ngModel)]="isMvp">mvp</label>
+      <label nz-checkbox [(ngModel)]="isVow">誓约</label>
+      <label nz-checkbox [(ngModel)]="isHolyLiver">圣肝</label>
+    </p>
+    <p>
+      <button nz-button nzType="primary" (click)="sure()">确定</button>
+    </p>
+  </nz-card>
+  <ng-template #extraTemplate>
+    <a (click)="clearSelect()">clear</a>
+  </ng-template>
+
+  <nz-row class="level" nzType="flex" nzAlign="middle" nzJustify="space-around" nzGutter="16">
+    <nz-col nzSpan="4">
+      <nz-input-number [nzMin]="1" [nzMax]="100" [(ngModel)]="startLevel" (ngModelChange)="changeLevel()"></nz-input-number>
+    </nz-col>
+    <nz-col nzSpan="12">
+      <nz-slider nzRange [nzMin]="1" [nzMax]="100" [nzMarks]="marks" [(ngModel)]="level" (nzOnAfterChange)="levelSliderChange()"></nz-slider>
+    </nz-col>
+    <nz-col nzSpan="4">
+      <nz-input-number [nzMin]="1" [nzMax]="100" [(ngModel)]="endLevel" (ngModelChange)="changeLevel()"></nz-input-number>
+    </nz-col>
+  </nz-row>
+
+
+  <nz-row class="map" nzType="flex" nzAlign="middle" nzJustify="start" nzGutter="16">
+    <nz-col *ngFor="let map of mapInfos" nzSpan="4">
+      <button nz-button nzType="primary" (click)="initMapInfo(map)">{{map.name}}</button>
+    </nz-col>
+  </nz-row>
+</div>
