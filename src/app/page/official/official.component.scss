@@ -8,13 +8,17 @@
     text-align: center;
   }
   .map {
-    width: 400px;
+    width: 600px;
     margin: 20px auto !important;
     nz-col {
       margin: 1px 0;
       [nz-button] {
         width: 100%;
         padding: 0;
+      }
+      .isSelect {
+        border-color: #40a9ff;
+        color: #40a9ff;
       }
     }
   }
