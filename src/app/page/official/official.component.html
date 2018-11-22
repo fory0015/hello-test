@@ -1,6 +1,7 @@
 <div class="calc-official">
+  <!-- 选择详情 -->
   <nz-card style="width:300px;" nzTitle="已选择" [nzExtra]="extraTemplate">
-    <p>level:<span *ngIf="level">{{startLevel}},{{endLevel}},{{sumtest}}</span></p>
+    <p>level:<span *ngIf="level">{{startLevel}},{{endLevel}},{{sumExp}}</span></p>
     <p>map:<span *ngIf="selectMap">{{selectMap.name}},{{selectMap.exp}},{{selectMap.downlevel}}</span></p>
     <p>
       <label nz-checkbox [(ngModel)]="isCaptain">队长</label>
@@ -10,20 +11,19 @@
     </p>
     <p>
       <button nz-button nzType="primary" (click)="sure()">确定</button>
-      <span *ngIf="sumtest" style="margin-left: 50px;">报告书:{{sumtest / 3000}}</span>
+      <span *ngIf="isSure" style="margin-left: 50px;">报告书:{{sumExp / 3000}}</span>
     </p>
   </nz-card>
   <ng-template #extraTemplate>
     <a (click)="clearSelect()">clear</a>
   </ng-template>
 
+  <!-- 结果 -->
   <nz-card style="width: 500px !important;" *ngIf="isSure">
-    <p> {{1}} 次</p>
-    <p>队长 {{1}} 次, MVP {{1}} 次, 圣肝{{1}}次 </p>
-    <p>队长加MVP {{1}} 次</p>
-    <p>队长加MVP加圣肝 {{1}} 次</p>
+    <p>{{resultMsg}}</p>
   </nz-card>
 
+  <!-- 等级 -->
   <nz-row class="level" nzType="flex" nzAlign="middle" nzJustify="space-around" nzGutter="16">
     <nz-col nzSpan="4">
       <nz-input-number [nzMin]="1" [nzMax]="100" [(ngModel)]="startLevel" (ngModelChange)="changeLevel()"></nz-input-number>
@@ -36,7 +36,7 @@
     </nz-col>
   </nz-row>
 
-
+  <!-- 地图 -->
   <nz-row class="map" nzType="flex" nzAlign="middle" nzJustify="start" nzGutter="16">
     <nz-col *ngFor="let map of mapInfos" nzSpan="2">
       <button nz-button nzType="default" [ngClass]="{'isSelect': selectMap?.name === map.name}" (click)="initMapInfo(map)">{{map.name}}</button>

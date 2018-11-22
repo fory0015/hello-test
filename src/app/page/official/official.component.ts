@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { levelData, mapDate } from 'src/app/service/data.';
+import { NzMessageService } from 'ng-zorro-antd';
+import { levelData, mapDate } from 'src/app/service/data';
+import { Map } from 'src/app/model/map';
+
 
 @Component({
   selector: 'app-official',
@@ -8,7 +11,7 @@ import { levelData, mapDate } from 'src/app/service/data.';
 })
 export class OfficialComponent implements OnInit {
   // 地图及等级所需经验信息
-  mapInfos: {}[];
+  mapInfos: Map[];
   levelInfos: any[];
 
   /**
@@ -16,22 +19,27 @@ export class OfficialComponent implements OnInit {
    */
   marks: {};
 
-  // 计算所需参数
+  // 计算所需提供参数
   startLevel: number = 1;
   endLevel: number = 100;
   level: number[] = [1, 100];
-  selectMap: {};
+  selectMap: Map;
   isCaptain: boolean = false;
   isMvp: boolean = false;
   isVow: boolean = false;
   isHolyLiver: boolean = false;
+
+  // 结果数据
+  normalCount: number;
+  sumExp: number;
+  resultMsg: string;
 
   /**
    * 是否计算完成
    */
   isSure: boolean = false;
 
-  constructor() {
+  constructor(private message: NzMessageService) {
     this.mapInfos = mapDate;
     this.levelInfos = levelData;
   }
@@ -67,7 +75,9 @@ export class OfficialComponent implements OnInit {
     this.isVow = false;
     this.isHolyLiver = false;
     this.isSure = false;
-    this.sumtest = null;
+    this.normalCount = null;
+    this.sumExp = null;
+    this.resultMsg = null;
   }
 
   /**
@@ -75,7 +85,6 @@ export class OfficialComponent implements OnInit {
    */
   changeLevel(): void {
     // console.log('changeStart', this.startLevel, this.endLevel);
-    this.sumtest = null;
     if (this.startLevel > this.endLevel) {
       let middle = this.startLevel;
       this.startLevel = this.endLevel;
@@ -96,15 +105,75 @@ export class OfficialComponent implements OnInit {
     this.changeLevel();
   }
 
-  sumtest: number;
+  /**
+   * 计算队伍加成
+   */
+  calcTeamAddition(nowLevel: number): number {
+    if (nowLevel < 10) {
+      return 1;
+    } else if (nowLevel < 30) {
+      return 1.5;
+    } else if (nowLevel < 70) {
+      return 2;
+    } else if (nowLevel < 90) {
+      return 2.5
+    } else {
+      return 3
+    }
+  }
+
+  /**
+   * 计算等级衰减
+   */
+  calcDownlevelAttenuation(nowLevel: number, downlevel: number): number {
+    if (nowLevel < downlevel) {
+      return 1;
+    } else if (nowLevel < downlevel + 10) {
+      return 0.8;
+    } else if (nowLevel < downlevel + 20) {
+      return 0.6;
+    } else if (nowLevel < downlevel + 30) {
+      return 0.4;
+    } else if (nowLevel < downlevel + 40) {
+      return 0.2;
+    } else if (nowLevel < downlevel + 50) {
+      return 0;
+    } else {
+      return -1;
+    }
+  }
+
   /**
    * 计算
    */
   sure(): void {
-    this.sumtest = 0;
-    for (let i = this.startLevel; i < this.endLevel; i++) {
-      this.sumtest += this.levelInfos[i - 1];
+    if (!this.selectMap) {
+      this.message.remove();
+      this.message.error('未选择地图');
+      return null;
     }
+    this.normalCount = 0;
+    this.sumExp = 0;
+    for (let i = this.startLevel; i < this.endLevel; i++) {
+      let teamAddition = this.calcTeamAddition(i);
+      let dlAttenuation = this.calcDownlevelAttenuation(i, this.selectMap.downlevel);
+      let exp = this.selectMap.exp;
+
+      // 经验加长及衰减
+      dlAttenuation === 0 ? exp = 5 : exp *= dlAttenuation;
+      dlAttenuation === -1 ? exp = 3 : null;
+      this.isCaptain ? exp *= 1.2 : null;
+      this.isMvp ? exp *= 1.3 : null;
+      this.isHolyLiver ? exp *= 1.5 : null;
+
+      this.normalCount += Math.ceil(this.levelInfos[i - 1] / (exp * teamAddition));
+      this.sumExp += this.levelInfos[i - 1];
+    }
+    this.resultMsg = `
+      ${this.startLevel} -> ${this.endLevel} , ${this.selectMap.name} ,
+      ${this.isCaptain ? '队长' : ''}${this.isMvp ? ' mvp' : ''}${this.isHolyLiver ? ' 圣肝' : ''} ,
+      ${this.normalCount} 次
+    `;
     this.isSure = true;
   }
 }
