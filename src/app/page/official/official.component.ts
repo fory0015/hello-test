@@ -30,7 +30,7 @@ export class OfficialComponent implements OnInit {
   isHolyLiver: boolean = false;
 
   // 结果数据
-  normalCount: number;
+  sumCount: number;
   sumExp: number;
   resultMsg: string;
 
@@ -75,7 +75,7 @@ export class OfficialComponent implements OnInit {
     this.isVow = false;
     this.isHolyLiver = false;
     this.isSure = false;
-    this.normalCount = null;
+    this.sumCount = null;
     this.sumExp = null;
     this.resultMsg = null;
   }
@@ -84,6 +84,7 @@ export class OfficialComponent implements OnInit {
    * 保持改变后等级排序
    */
   changeLevel(): void {
+    this.sumExp = null;
     // console.log('changeStart', this.startLevel, this.endLevel);
     if (this.startLevel > this.endLevel) {
       let middle = this.startLevel;
@@ -152,27 +153,45 @@ export class OfficialComponent implements OnInit {
       this.message.error('未选择地图');
       return null;
     }
-    this.normalCount = 0;
+
+    // 初始化
+    this.sumCount = 0;
     this.sumExp = 0;
+
+    /**
+     * 当前溢出的经验值
+     */
+    let nowExp = 0;
+    // 计算次数
     for (let i = this.startLevel; i < this.endLevel; i++) {
+      this.sumExp += this.levelInfos[i - 1];
+      // 上级经验是否溢出
+      let needExp = this.levelInfos[i - 1] - nowExp;
+      if (needExp < 0) {
+        nowExp -= this.levelInfos[i - 1];
+        continue;
+      }
+
       let teamAddition = this.calcTeamAddition(i);
       let dlAttenuation = this.calcDownlevelAttenuation(i, this.selectMap.downlevel);
       let exp = this.selectMap.exp;
 
-      // 经验加长及衰减
+      // 经验加成及衰减
       dlAttenuation === 0 ? exp = 5 : exp *= dlAttenuation;
       dlAttenuation === -1 ? exp = 3 : null;
       this.isCaptain ? exp *= 1.2 : null;
       this.isMvp ? exp *= 1.3 : null;
       this.isHolyLiver ? exp *= 1.5 : null;
+      exp = Math.ceil(exp * teamAddition);
 
-      this.normalCount += Math.ceil(this.levelInfos[i - 1] / (exp * teamAddition));
-      this.sumExp += this.levelInfos[i - 1];
+      let needCount = Math.ceil(needExp / (exp));
+      nowExp = needCount * exp - needExp;
+      this.sumCount += needCount;
     }
     this.resultMsg = `
       ${this.startLevel} -> ${this.endLevel} , ${this.selectMap.name} ,
       ${this.isCaptain ? '队长' : ''}${this.isMvp ? ' mvp' : ''}${this.isHolyLiver ? ' 圣肝' : ''} ,
-      ${this.normalCount} 次
+      ${this.sumCount} 次
     `;
     this.isSure = true;
   }

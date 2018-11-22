@@ -1,8 +1,8 @@
 <div class="calc-official">
   <!-- 选择详情 -->
   <nz-card style="width:300px;" nzTitle="已选择" [nzExtra]="extraTemplate">
-    <p>level:<span *ngIf="level">{{startLevel}},{{endLevel}},{{sumExp}}</span></p>
-    <p>map:<span *ngIf="selectMap">{{selectMap.name}},{{selectMap.exp}},{{selectMap.downlevel}}</span></p>
+    <p>level: <span *ngIf="level">{{startLevel}} => {{endLevel}} : {{sumExp}}</span></p>
+    <p>map: <span *ngIf="selectMap">{{selectMap.name}},{{selectMap.exp}},{{selectMap.downlevel}}</span></p>
     <p>
       <label nz-checkbox [(ngModel)]="isCaptain">队长</label>
       <label nz-checkbox [(ngModel)]="isMvp">mvp</label>
@@ -11,7 +11,7 @@
     </p>
     <p>
       <button nz-button nzType="primary" (click)="sure()">确定</button>
-      <span *ngIf="isSure" style="margin-left: 50px;">报告书:{{sumExp / 3000}}</span>
+      <span *ngIf="isSure" style="margin-left: 100px;">报告书:{{sumExp / 3000 | number : '1.0-1'}}</span>
     </p>
   </nz-card>
   <ng-template #extraTemplate>
